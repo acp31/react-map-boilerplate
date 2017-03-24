@@ -1,5 +1,6 @@
 import React from 'react';
 import FeatureTidbit from '../FeatureTidbit'
+import Wrapper from './Wrapper'
 import { withGoogleMap, GoogleMap, Marker } from "react-google-maps";
 import _ from 'lodash'
 import withScriptjs from 'react-google-maps/lib/async/withScriptjs';
@@ -12,7 +13,7 @@ const renderInfoWindow = (marker, index) => {
     lat: marker.position.lat,
     lng: marker.position.lng 
   };
-  
+
   return (
     <InfoBox
       key={`${index}_info_window`}
@@ -46,7 +47,15 @@ export default class GMap extends React.Component {
 
   render() {
 
+    let featuresToShow;
+    if(this.props.filteredFeatures) {
+      featuresToShow = this.props.filteredFeatures;
+    } else {
+      featuresToShow = this.props.features;
+    }
+
     return (
+      <Wrapper>
         <GettingStartedGoogleMap
           googleMapURL="https://maps.googleapis.com/maps/api/js?v=3.exp"
           loadingElement={
@@ -62,9 +71,10 @@ export default class GMap extends React.Component {
           }
           onMapLoad={_.noop}
           onMapClick={_.noop}
-          markers={this.props.features}
+          markers={featuresToShow}
           onMarkerRightClick={_.noop}
         />
+        </Wrapper>
     );
   }
 }

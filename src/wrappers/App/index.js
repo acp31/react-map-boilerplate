@@ -11,6 +11,7 @@ import {deepOrange500} from 'material-ui/styles/colors';
 import AppBar from 'material-ui/AppBar';
 import getMuiTheme from 'material-ui/styles/getMuiTheme';
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
+import fuzzy from 'fuzzy'
 
 const muiTheme = getMuiTheme({
   palette: {
@@ -45,8 +46,26 @@ const features = [
       lat: 43.8781,
       lng: -87.6298,
     }  
+  },
+  {
+    title: "Lorem Ipsum",
+    meta: "here's some meta about the third one",
+    image: "http://placehold.it/500x200",
+    position: {
+      lat: 36.8781,
+      lng: -84.6298,
+    }  
   }
 ];
+
+const filterOutFeatures = function(features, filter) {
+  const options = {
+    extract: function(el) { return el.title; }
+  };
+  const results = fuzzy.filter(filter, features, options);
+  const matches = results.map(function(el) { return el.original; });
+  return matches;
+}
 
 class App extends Component {
 
@@ -55,7 +74,8 @@ class App extends Component {
     super();
 
     this.state = {
-      activeFeatureFilter: ""
+      activeFeatureFilter: "",
+      filteredFeatures: false
     }
 
     this.updateActiveFilter = this.updateActiveFilter.bind(this);
@@ -65,6 +85,12 @@ class App extends Component {
     this.setState({
       activeFeatureFilter: newFilterValue
     });
+
+    const filteredFeatures = filterOutFeatures(features, newFilterValue);
+    this.setState({
+      filteredFeatures: filteredFeatures
+    });
+
   }
 
   render() {
@@ -80,10 +106,18 @@ class App extends Component {
               <Row>
                 <Col xs={12} md={6}>
                   <Filter onFilterUpdate={this.updateActiveFilter}/>
-                  <FeatureList filter={this.state.activeFeatureFilter} features={features}/>
+                  <FeatureList
+                    filteredFeatures={this.state.filteredFeatures}
+                    filter={this.state.activeFeatureFilter}
+                    features={features}
+                  />
                 </Col>
                 <Col xs={12} md={6}>
-                  <GMap filter={this.state.activeFeatureFilter} features={features}/>
+                  <GMap 
+                    filteredFeatures={this.state.filteredFeatures}
+                    filter={this.state.activeFeatureFilter}
+                    features={features}
+                  />
                 </Col>                
               </Row>
             </Grid>

@@ -15,8 +15,6 @@ export default class FeatureList extends React.Component {
       padding: 2
     };
 
-    console.log(features);
-
     return (
       <GridList cellHeight="auto" padding={30}>
         {features.map( function(feature, index) {
@@ -40,8 +38,15 @@ export default class FeatureList extends React.Component {
 
     // We need a padding of two so the card border shows.
 
-    if(this.props.features.length) {
-      content = this.renderFeatures(this.props.features);
+    let featuresToShow;
+    if(this.props.filteredFeatures) {
+      featuresToShow = this.props.filteredFeatures;
+    } else {
+      featuresToShow = this.props.features;
+    }
+
+    if(featuresToShow.length) {
+      content = this.renderFeatures(featuresToShow);
     } else {
       content = this.returnEmptySet();
     }
