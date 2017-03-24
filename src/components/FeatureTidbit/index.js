@@ -1,23 +1,17 @@
 import React from 'react';
 import Wrapper from './Wrapper'
-import CellInner from './CellInner'
+import TidbitTitle from './TidbitTitle'
 
-export default class Cell extends React.Component {
+export default class FeatureTidbit extends React.Component {
+  
   static propTypes = {
-    active: React.PropTypes.bool,
-    cellIndex: React.PropTypes.number,
-    onCellClick: React.PropTypes.func
+    feature: React.PropTypes.object
   };
-
-  constructor(props) {
-    super(props);
-    this.onCellClick = props.onCellClick.bind(this, this.props.cellIndex);
-  }
 
   render() {
     return (
-      <Wrapper  >
-        <CellInner onClick={this.onCellClick} active={this.props.active}></CellInner>
+      <Wrapper>
+        <TidbitTitle>{this.props.feature.title}</TidbitTitle>
       </Wrapper>
     );
   }

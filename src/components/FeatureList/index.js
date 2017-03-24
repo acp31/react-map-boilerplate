@@ -4,43 +4,51 @@ import FeatureExcerpt from '../FeatureExcerpt'
 import { GridTile, GridList } from 'material-ui/GridList';
 
 export default class FeatureList extends React.Component {
-  
-  render() {
 
-    // We need a padding of two so the card border shows.
+  static propTypes = {
+    features: React.PropTypes.array
+  };
+
+  renderFeatures(features) {
 
     const gridTileStyle = {
       padding: 2
     };
 
+    console.log(features);
+
+    return (
+      <GridList cellHeight="auto" padding={30}>
+        {features.map( function(feature, index) {
+          return (
+            <GridTile key={"feature_" + index} style={gridTileStyle}>
+              <FeatureExcerpt title={feature.title} meta={feature.meta} image={feature.image} />
+            </GridTile>
+          );
+        })}    
+      </GridList>
+    );
+  }
+
+  returnEmptySet() {
+    return (<div>No Features Found</div>)
+  }
+  
+  render() {
+
+    let content = false;
+
+    // We need a padding of two so the card border shows.
+
+    if(this.props.features.length) {
+      content = this.renderFeatures(this.props.features);
+    } else {
+      content = this.returnEmptySet();
+    }
+
     return (
       <Wrapper>
-        <GridList cellHeight="auto" padding={30}>
-          <GridTile style={gridTileStyle}>
-            <FeatureExcerpt title="A Title" meta="Some Meta" image="http://placehold.it/500x500" />
-          </GridTile>
-          <GridTile style={gridTileStyle}>
-            <FeatureExcerpt title="A Title" meta="Some Meta" image="http://placehold.it/500x500" />
-          </GridTile>
-          <GridTile style={gridTileStyle}>
-            <FeatureExcerpt title="A Title" meta="Some Meta" image="http://placehold.it/500x500" />
-          </GridTile>
-          <GridTile style={gridTileStyle}>
-            <FeatureExcerpt title="A Title" meta="Some Meta" image="http://placehold.it/500x500" />
-          </GridTile>        
-          <GridTile style={gridTileStyle}>
-            <FeatureExcerpt title="A Title" meta="Some Meta" image="http://placehold.it/500x500" />
-          </GridTile>
-          <GridTile style={gridTileStyle}>
-            <FeatureExcerpt title="A Title" meta="Some Meta" image="http://placehold.it/500x500" />
-          </GridTile>
-          <GridTile style={gridTileStyle}>
-            <FeatureExcerpt title="A Title" meta="Some Meta" image="http://placehold.it/500x500" />
-          </GridTile>
-          <GridTile style={gridTileStyle}>
-            <FeatureExcerpt title="A Title" meta="Some Meta" image="http://placehold.it/500x500" />
-          </GridTile>        
-        </GridList>
+        {content}
       </Wrapper>
     );
   }

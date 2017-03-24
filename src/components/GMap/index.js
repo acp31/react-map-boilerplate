@@ -1,36 +1,57 @@
 import React from 'react';
-import Wrapper from './Wrapper'
+import FeatureTidbit from '../FeatureTidbit'
 import { withGoogleMap, GoogleMap, Marker } from "react-google-maps";
 import _ from 'lodash'
 import withScriptjs from 'react-google-maps/lib/async/withScriptjs';
+import InfoBox from "react-google-maps/lib/addons/InfoBox";
 
-const markers = [];
+const renderInfoWindow = (marker, index) => {
+  // Normal version: Pass string as content
+  
+  const featureLocation = {
+    lat: marker.position.lat,
+    lng: marker.position.lng 
+  };
+  
+  return (
+    <InfoBox
+      key={`${index}_info_window`}
+      defaultPosition={featureLocation}
+      options={{closeBoxURL: "", enableEventPropagation: true, disableAutoPan: true, boxStyle: { opacity: 1,width: "225px" }}}>
+      <FeatureTidbit feature={marker} />
+    </InfoBox>
+  )
+}
 
 const GettingStartedGoogleMap = withScriptjs(withGoogleMap(props => (
+
   <GoogleMap
     ref={props.onMapLoad}
     defaultZoom={3}
-    defaultCenter={{ lat: -25.363882, lng: 131.044922 }}
+    defaultCenter={{ lat: 44.8781, lng: -87.6298 }}
     onClick={props.onMapClick}
   >
-    {props.markers.map((marker, index) => (
+    { props.markers.map((marker, index) => (
       <Marker
         {...marker}
         onRightClick={() => props.onMarkerRightClick(index)}
-      />
+      >
+        {renderInfoWindow(marker, index)}
+      </Marker>
     ))}
   </GoogleMap>
 )));
 
-export default class Map extends React.Component {
+export default class GMap extends React.Component {
 
   render() {
+
     return (
         <GettingStartedGoogleMap
           googleMapURL="https://maps.googleapis.com/maps/api/js?v=3.exp"
           loadingElement={
             <div style={{ height: `100%` }}>
-              <p>Loading</p>
+              <p>Loading Map...</p>
             </div>
           }        
           containerElement={
@@ -41,7 +62,7 @@ export default class Map extends React.Component {
           }
           onMapLoad={_.noop}
           onMapClick={_.noop}
-          markers={markers}
+          markers={this.props.features}
           onMarkerRightClick={_.noop}
         />
     );
